@@ -2,7 +2,9 @@
 #include <windows.h>
 #include <cstdlib>
 #include <conio.h>
+#include <ctime>
 using namespace std;
+void Menu();
 void gotoxy(int column, int line);
 struct Point {
     int x, y;
@@ -11,16 +13,17 @@ class CONRAN {
 public:
     struct Point A[100];
     struct Point Moi;
-    int DoDai;
+    int DoDai, DoKho;
+
     CONRAN() {
-        DoDai = 3;
         Moi.x = 0; Moi.y = 0;
+        DoDai = 3; DoKho = 1;
         A[0].x = 10; A[0].y = 10;
         A[1].x = 11; A[1].y = 10;
         A[2].x = 12; A[2].y = 10;
     }
     void Ve() {
-        for (int j = 0; j < 42; j++) {              //Vẽ tường
+        for (int j = 0; j < 42; j++) {                                      //Vẽ tường
             gotoxy(j, 0);
             cout << "X";
             gotoxy(j, 21);
@@ -32,17 +35,19 @@ public:
             gotoxy(41, j);
             cout << "X";
         }
-        for (int i = 0; i < DoDai; i++) {           //Vẽ rắn
+        for (int i = 0; i < DoDai; i++) {                                   //Vẽ rắn
             gotoxy(A[i].x, A[i].y);
             cout << "X";
         }
-        gotoxy(Moi.x, Moi.y);                       //Vẽ mồi
+        gotoxy(Moi.x, Moi.y);                                               //Vẽ mồi
         cout << "X";
-        gotoxy(45, 9);                              //Hiện điểm
-        printf("Scores: %d", DoDai);
+        gotoxy(45, 9);                                                      //Ghi điểm
+        printf("Scores: %d", DoDai*DoKho);
+        gotoxy(45, 11);
+        printf("Level: %d", DoKho);
     }
     void DiChuyen(int Huong) {
-        for (int i = DoDai; i > 0; i--)
+        for (int i = DoDai ; i > 0; i--)
             A[i] = A[i - 1];
         if (Huong == 0) A[0].x = A[0].x + 1;
         if (Huong == 1) A[0].y = A[0].y + 1;
@@ -53,10 +58,11 @@ public:
             taoMoi();
         }
         if (A[0].x == 0 || A[0].x == 41 || A[0].y == 0 || A[0].y == 21) {   //Tông tường = die
+           // system("cls");
             gotoxy(15, 9);
             printf("GAME OVER!");
             gotoxy(14, 10);
-            printf("You point: %d.", DoDai);
+            printf("Your score: %d.", DoDai*DoKho);
             Sleep(3000);
             menu();                                                         //Trở về menu chính
         }
@@ -82,9 +88,16 @@ public:
             system("cls");
             Ve();
             DiChuyen(Huong);
-            Sleep(150);
+            Sleep(320/DoKho);
         }
     }
+    void Setting() {
+        system("cls");
+        printf("SETTING\nCurrent level: %d\nLevel selection (1 -> 8): ", DoKho);
+        do {
+            cin >> DoKho;
+        } while (DoKho > 8 && DoKho < 1);
+    };
     void menu() {
         DoDai = 3;
         A[0].x = 10; A[0].y = 10;
@@ -100,7 +113,7 @@ public:
             switch (choice)
             {
             case '1': Start(); break;
-            case '2':  break;
+            case '2': Setting(); break;
             case '3': exit(0); break;
             }
         } while (1);
@@ -110,7 +123,7 @@ public:
 int main()
 {
     CONRAN r;
-    r.menu();
+    r.menu(); 
     return 0;
 }
 
