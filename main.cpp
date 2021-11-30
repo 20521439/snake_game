@@ -58,38 +58,59 @@ public:
             gotoxy(14, 10);
             printf("You point: %d.", DoDai);
             Sleep(3000);
-            exit(0);
+            menu();                                                         //Trở về menu chính
         }
 
     }
-    void taoMoi() {
+    void taoMoi() {                                                         //Tạo mồi
         srand(time(NULL));
         Moi.x = rand() % 40 + 1;
         Moi.y = rand() % 20 + 1;
     };
+    void Start() {                                                          //Xử lý chính
+        int Huong = 0;
+        char t;
+        taoMoi();
+        while (1) {
+            if (_kbhit()) {
+                t = _getch();
+                if (t == 'a') Huong = 2;
+                if (t == 'w') Huong = 3;
+                if (t == 'd') Huong = 0;
+                if (t == 's') Huong = 1;
+            }
+            system("cls");
+            Ve();
+            DiChuyen(Huong);
+            Sleep(150);
+        }
+    }
+    void menu() {
+        DoDai = 3;
+        A[0].x = 10; A[0].y = 10;
+        A[1].x = 11; A[1].y = 10;
+        A[2].x = 12; A[2].y = 10;
+        char choice;
+        do {
+            system("cls");
+            printf("SNAKE\n1.Start\n2.Setting\n3.Quit game\nType you choose (1->3): ");
+            do {
+                cin >> choice;
+            } while (choice != '1' && choice != '2' && choice != '3');
+            switch (choice)
+            {
+            case '1': Start(); break;
+            case '2':  break;
+            case '3': exit(0); break;
+            }
+        } while (1);
+    }
 };
 
 int main()
 {
     CONRAN r;
-    int Huong = 0;
-    char t;     
-    r.taoMoi();
-
-    while (1) {
-        if (_kbhit()) {
-            t = _getch();
-            if (t == 'a') Huong = 2;
-            if (t == 'w') Huong = 3;
-            if (t == 'd') Huong = 0;
-            if (t == 's') Huong = 1;
-        }
-        system("cls");
-        r.Ve();
-        r.DiChuyen(Huong);
-        Sleep(150);
-    }
-
+    r.menu();
     return 0;
 }
 
