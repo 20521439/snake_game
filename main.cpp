@@ -20,7 +20,7 @@ public:
         A[2].x = 12; A[2].y = 10;
     }
     void Ve() {
-        for (int j = 0; j < 42; j++) {        //Vẽ tường
+        for (int j = 0; j < 42; j++) {              //Vẽ tường
             gotoxy(j, 0);
             cout << "X";
             gotoxy(j, 21);
@@ -32,12 +32,14 @@ public:
             gotoxy(41, j);
             cout << "X";
         }
-        for (int i = 0; i < DoDai; i++) {   //Vẽ rắn
+        for (int i = 0; i < DoDai; i++) {           //Vẽ rắn
             gotoxy(A[i].x, A[i].y);
             cout << "X";
         }
-        gotoxy(Moi.x, Moi.y);                 //Vẽ mồi
+        gotoxy(Moi.x, Moi.y);                       //Vẽ mồi
         cout << "X";
+        gotoxy(45, 9);                              //Hiện điểm
+        printf("Scores: %d", DoDai);
     }
     void DiChuyen(int Huong) {
         for (int i = DoDai; i > 0; i--)
@@ -49,6 +51,14 @@ public:
         if (A[0].x == Moi.x && A[0].y == Moi.y) {
             DoDai++;
             taoMoi();
+        }
+        if (A[0].x == 0 || A[0].x == 41 || A[0].y == 0 || A[0].y == 21) {   //Tông tường = die
+            gotoxy(15, 9);
+            printf("GAME OVER!");
+            gotoxy(14, 10);
+            printf("You point: %d.", DoDai);
+            Sleep(3000);
+            exit(0);
         }
 
     }
@@ -77,7 +87,7 @@ int main()
         system("cls");
         r.Ve();
         r.DiChuyen(Huong);
-        Sleep(300);
+        Sleep(150);
     }
 
     return 0;
