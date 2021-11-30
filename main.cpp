@@ -10,9 +10,11 @@ struct Point {
 class CONRAN {
 public:
     struct Point A[100];
+    struct Point Moi;
     int DoDai;
     CONRAN() {
         DoDai = 3;
+        Moi.x = 0; Moi.y = 0;
         A[0].x = 10; A[0].y = 10;
         A[1].x = 11; A[1].y = 10;
         A[2].x = 12; A[2].y = 10;
@@ -34,23 +36,35 @@ public:
             gotoxy(A[i].x, A[i].y);
             cout << "X";
         }
+        gotoxy(Moi.x, Moi.y);                 //Vẽ mồi
+        cout << "X";
     }
     void DiChuyen(int Huong) {
-        for (int i = DoDai - 1; i > 0; i--)
+        for (int i = DoDai; i > 0; i--)
             A[i] = A[i - 1];
         if (Huong == 0) A[0].x = A[0].x + 1;
         if (Huong == 1) A[0].y = A[0].y + 1;
         if (Huong == 2) A[0].x = A[0].x - 1;
         if (Huong == 3) A[0].y = A[0].y - 1;
+        if (A[0].x == Moi.x && A[0].y == Moi.y) {
+            DoDai++;
+            taoMoi();
+        }
 
     }
+    void taoMoi() {
+        srand(time(NULL));
+        Moi.x = rand() % 40 + 1;
+        Moi.y = rand() % 20 + 1;
+    };
 };
 
 int main()
 {
     CONRAN r;
     int Huong = 0;
-    char t;
+    char t;     
+    r.taoMoi();
 
     while (1) {
         if (_kbhit()) {
