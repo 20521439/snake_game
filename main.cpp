@@ -96,7 +96,7 @@ public:
         printf("SETTING\nCurrent level: %d\nLevel selection (1 -> 8): ", DoKho);
         do {
             cin >> DoKho;
-        } while (DoKho > 8 && DoKho < 1);
+        } while (DoKho > 8 || DoKho < 1);
     };
     void menu() {
         DoDai = 3;
