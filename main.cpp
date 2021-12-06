@@ -59,13 +59,12 @@ public:
             TaoMoi();
         }
         if (A[0].x == 0 || A[0].x == 41 || A[0].y == 0 || A[0].y == 21) {   //Tông tường = die
-           // system("cls");
-            gotoxy(15, 9);
-            printf("GAME OVER!");
-            gotoxy(14, 10);
-            printf("Your score: %d.", DoDai * DoKho);
-            Sleep(3000);
-            Menu();                                                         //Trở về Menu chính
+            Die();
+        }
+        for (int i = DoDai - 1; i > 3; i--) {                               //Cắn cơ thể = die
+            if (A[0].x == A[i].x && A[0].y == A[i].y) {
+                Die();
+            }
         }
 
     }
@@ -92,12 +91,20 @@ public:
             Sleep(320 / DoKho);
         }
     }
+    void Die() {
+        gotoxy(15, 9);
+        printf("GAME OVER!");
+        gotoxy(14, 10);
+        printf("Your score: %d.", DoDai * DoKho);
+        Sleep(3000);
+        Menu();                              //Trở về Menu chính
+    }
     void Setting() {
         system("cls");
         printf("SETTING\nCurrent level: %d\nLevel selection (1 -> 8): ", DoKho);
         do {
             cin >> DoKho;
-        } while (DoKho > 8 || DoKho < 1);   // Sửa chỗ này
+        } while (DoKho > 8 || DoKho < 1);
     };
     void Menu() {
         DoDai = 3; LastDirection = 'd';
