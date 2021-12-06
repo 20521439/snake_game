@@ -4,7 +4,6 @@
 #include <conio.h>
 #include <ctime>
 using namespace std;
-void Menu();
 void gotoxy(int column, int line);
 struct Point {
     int x, y;
@@ -14,10 +13,12 @@ public:
     struct Point A[100];
     struct Point Moi;
     int DoDai, DoKho;
+    char LastDirection;
 
     CONRAN() {
         Moi.x = 0; Moi.y = 0;
-        DoDai = 3; DoKho = 1;
+        DoDai = 3; DoKho = 2;
+        LastDirection = 'd';
         A[0].x = 10; A[0].y = 10;
         A[1].x = 11; A[1].y = 10;
         A[2].x = 12; A[2].y = 10;
@@ -42,12 +43,12 @@ public:
         gotoxy(Moi.x, Moi.y);                                               //Vẽ mồi
         cout << "X";
         gotoxy(45, 9);                                                      //Ghi điểm
-        printf("Scores: %d", DoDai*DoKho);
+        printf("Scores: %d", DoDai * DoKho);
         gotoxy(45, 11);
         printf("Level: %d", DoKho);
     }
     void DiChuyen(int Huong) {
-        for (int i = DoDai ; i > 0; i--)
+        for (int i = DoDai; i > 0; i--)
             A[i] = A[i - 1];
         if (Huong == 0) A[0].x = A[0].x + 1;
         if (Huong == 1) A[0].y = A[0].y + 1;
@@ -55,20 +56,20 @@ public:
         if (Huong == 3) A[0].y = A[0].y - 1;
         if (A[0].x == Moi.x && A[0].y == Moi.y) {
             DoDai++;
-            taoMoi();
+            TaoMoi();
         }
         if (A[0].x == 0 || A[0].x == 41 || A[0].y == 0 || A[0].y == 21) {   //Tông tường = die
            // system("cls");
             gotoxy(15, 9);
             printf("GAME OVER!");
             gotoxy(14, 10);
-            printf("Your score: %d.", DoDai*DoKho);
+            printf("Your score: %d.", DoDai * DoKho);
             Sleep(3000);
-            menu();                                                         //Trở về menu chính
+            Menu();                                                         //Trở về Menu chính
         }
 
     }
-    void taoMoi() {                                                         //Tạo mồi
+    void TaoMoi() {                                                         //Tạo mồi
         srand(time(NULL));
         Moi.x = rand() % 40 + 1;
         Moi.y = rand() % 20 + 1;
@@ -76,19 +77,19 @@ public:
     void Start() {                                                          //Xử lý chính
         int Huong = 0;
         char t;
-        taoMoi();
+        TaoMoi();
         while (1) {
             if (_kbhit()) {
                 t = _getch();
-                if (t == 'a') Huong = 2;
-                if (t == 'w') Huong = 3;
-                if (t == 'd') Huong = 0;
-                if (t == 's') Huong = 1;
+                if (t == 'a' && LastDirection != 'd') { Huong = 2; LastDirection = t; }
+                if (t == 'w' && LastDirection != 's') { Huong = 3; LastDirection = t; }
+                if (t == 'd' && LastDirection != 'a') { Huong = 0; LastDirection = t; }
+                if (t == 's' && LastDirection != 'w') { Huong = 1; LastDirection = t; }
             }
             system("cls");
             Ve();
             DiChuyen(Huong);
-            Sleep(320/DoKho);
+            Sleep(320 / DoKho);
         }
     }
     void Setting() {
@@ -96,10 +97,10 @@ public:
         printf("SETTING\nCurrent level: %d\nLevel selection (1 -> 8): ", DoKho);
         do {
             cin >> DoKho;
-        } while (DoKho > 8 || DoKho < 1);
+        } while (DoKho > 8 || DoKho < 1);   // Sửa chỗ này
     };
-    void menu() {
-        DoDai = 3;
+    void Menu() {
+        DoDai = 3; LastDirection = 'd';
         A[0].x = 10; A[0].y = 10;
         A[1].x = 11; A[1].y = 10;
         A[2].x = 12; A[2].y = 10;
@@ -123,7 +124,7 @@ public:
 int main()
 {
     CONRAN r;
-    r.menu(); 
+    r.Menu();
     return 0;
 }
 
