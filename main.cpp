@@ -119,9 +119,53 @@ public:
         } while (1);
     }
 };
-
+void MainMenu(int &n)                                                                      //Menu phía ngoài trước khi vào game
+{
+	cout<<"\t\t\tCHAO MUNG CAC BAN DEN VOI TRO CHOI CON RAN\n";
+	cout<<"\t\t\tWELCOME TO SNAKE GAME\n";
+	cout<<"\t\t\tVUI LONG CHON NGON NGU\n";
+	cout<<"\t\t\tPLEASE SELECT LANGUAGE\n";
+	cout<<"\t\t\t1.Tieng Viet\n";
+	cout<<"\t\t\t2.English\n";
+	do
+		{
+		cout<<"\t\t\tMoi ban chon ngon ngu/Please choose your language:";
+		cin>>n;
+		}
+	while (n!=1&&n!=2);
+	system("cls");
+	if (n==1) 
+		{
+		cout<<"\t\t\tCAM ON SU LUA CHON CUA BAN\n";Sleep(2500);
+		cout<<"\t\t\tCHUC BAN CO MOT KHOANG THOI GIAN VUI VE\n";Sleep(2500);
+		cout<<"\t\t\tTRO CHOI CON RAN-DUOC PHAT TRIEN TU NHOM 3K1T\n";Sleep(2500);
+		cout<<"\t\t\t---HUONG DAN CHOI---\n";
+		cout<<"\t\t\t -Phim W di len-\n";
+		cout<<"\t\t\t -Phim S di xuong-\n";
+		cout<<"\t\t\t -Phim A sang trai-\n";
+		cout<<"\t\t\t -Phim D sang phai-\n";
+		Sleep(2500);
+		cout<<"\t\t\tCho trong giay lat...";Sleep(2500);
+		system("cls");
+		}
+	else
+		{
+		cout<<"\t\t\tTHANK YOU FOR YOUR CHOICE\n";Sleep(2500);
+		cout<<"\t\t\tHAVE A NICE TIME!!!\n";Sleep(2500);
+		cout<<"\t\t\tSNAKE GAME-DEVELOPED BY 3K1T GROUP\n";Sleep(2500);
+		cout<<"\t\t\t---HOW TO PLAY---\n";
+		cout<<"\t\t\t-Press W -Up-\n";
+		cout<<"\t\t\t-Press S -Down-\n";
+		cout<<"\t\t\t-Press A -Left-\n";
+		cout<<"\t\t\t-Press D -Right-\n";
+		Sleep(2500);
+		cout<<"\t\t\tWait for a minute...";Sleep(2500);
+		system("cls");
+		}
+}
 int main()
 {
+    int n;MainMenu(n);                             //Menu ngoài,đang setup để tạo 2 ngôn ngữ phía trong
     CONRAN r;
     r.menu(); 
     return 0;
