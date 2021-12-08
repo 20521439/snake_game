@@ -10,7 +10,7 @@ struct Point {
 };
 class CONRAN {
 public:
-    struct Point A[100];
+    struct Point A[800];
     struct Point Moi;
     int DoDai, DoKho, Level, LevelUnlock;
     char LastDirection;
@@ -20,7 +20,7 @@ public:
         DoDai = 3; DoKho = 2; Level = 1; LevelUnlock = 1;
         LastDirection = 'd';
     }
-    void Ve() {
+    void VeTuongVaCNV() {
         for (int j = 0; j < 42; j++) {                                      //Vẽ tường
             gotoxy(j, 0);
             cout << "X";
@@ -44,16 +44,24 @@ public:
         default:
             break;
         }
+    }
+    void VeRanVaMoi() {
         for (int i = 0; i < DoDai; i++) {                                   //Vẽ rắn
             gotoxy(A[i].x, A[i].y);
             cout << "X";
         }
+        gotoxy(Moi.x, Moi.y);                                               //Xóa mồi
+        cout << " ";
         gotoxy(Moi.x, Moi.y);                                               //Vẽ mồi
         cout << "X";
         gotoxy(45, 9);                                                      //Ghi điểm
         printf("Scores: %d", (DoDai - 3) * DoKho);
-        gotoxy(45, 11);
-        printf("Difficult: %d", DoKho);
+    }
+    void XoaRan() {
+        for (int i = 0; i <= DoDai; i++) {                                   //Vẽ rắn
+            gotoxy(A[i].x, A[i].y);
+            cout << " ";
+        }
     }
     void DiChuyen(int Huong) {
         for (int i = DoDai; i > 0; i--)
@@ -63,8 +71,8 @@ public:
         if (Huong == 2) A[0].x = A[0].x - 1;
         if (Huong == 3) A[0].y = A[0].y - 1;
         if (A[0].x == Moi.x && A[0].y == Moi.y) {
-            DoDai++;
-            switch (Level)                                                      //Die vì chướng ngại vật theo độ khó
+            DoDai++;                                                            //Tăng độ dài
+            switch (Level)
             {
             case 1: TaoMoiLevel1(); break;
             case 2: TaoMoiLevel2(); break;
@@ -253,7 +261,7 @@ public:
         int Huong = 0;
         char t;
         ChooseLevel();
-        switch (Level)                                                      //Die vì chướng ngại vật theo độ khó
+        switch (Level)                                                      //Tạo mồi theo Level
         {
         case 1: TaoMoiLevel1(); break;
         case 2: TaoMoiLevel2(); break;
@@ -264,6 +272,10 @@ public:
         default:
             break;
         }
+        system("cls");
+        VeTuongVaCNV();
+        gotoxy(45, 11);                                                     //Hiển thị độ khó
+        printf("Difficult: %d", DoKho);
         while (1) {
             if (_kbhit()) {
                 t = _getch();
@@ -272,9 +284,10 @@ public:
                 if (t == 'd' && LastDirection != 'a') { Huong = 0; LastDirection = t; }
                 if (t == 's' && LastDirection != 'w') { Huong = 1; LastDirection = t; }
             }
-            system("cls");
-            Ve();
+            XoaRan();
+            VeRanVaMoi();
             DiChuyen(Huong);
+            gotoxy(52, 9);
             Sleep(320 / DoKho);
         }
     }
