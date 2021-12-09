@@ -17,7 +17,7 @@ public:
 
     CONRAN() {
         Moi.x = 0; Moi.y = 0;
-        DoDai = 3; DoKho = 2; Level = 1; LevelUnlock = 1;
+        DoDai = 3; DoKho = 2; Level = 1; LevelUnlock = 8;
         LastDirection = 'd';
     }
     void VeTuongVaCNV() {
@@ -41,6 +41,8 @@ public:
         case 4: VeChuongNgaiVatLevel4();  break;
         case 5: VeChuongNgaiVatLevel5();  break;
         case 6: VeChuongNgaiVatLevel6();  break;
+        case 7: VeChuongNgaiVatLevel7();  break;
+        case 8: VeChuongNgaiVatLevel8();  break;
         default:
             break;
         }
@@ -80,6 +82,8 @@ public:
             case 4: TaoMoiLevel4(); break;
             case 5: TaoMoiLevel5(); break;
             case 6: TaoMoiLevel6(); break;
+            case 7: TaoMoiLevel7(); break;
+            case 8: TaoMoiLevel8(); break;
             default:
                 break;
             }
@@ -96,6 +100,8 @@ public:
         case 4: ChuongNgaiVatLevel4(); break;
         case 5: ChuongNgaiVatLevel5(); break;
         case 6: ChuongNgaiVatLevel6(); break;
+        case 7: ChuongNgaiVatLevel7(); break;
+        case 8: ChuongNgaiVatLevel8(); break;
         default:
             break;
         }
@@ -106,24 +112,12 @@ public:
         }
 
     }
+
     void TaoMoiLevel1() {                                                         //Tạo mồi
         srand(time(NULL));
         Moi.x = rand() % 40 + 1;
         Moi.y = rand() % 20 + 1;
     };
-    void VeChuongNgaiVatLevel2() {
-        for (int i = 6; i < 16; i++) {
-            gotoxy(11, i);
-            cout << "X";
-            gotoxy(30, i);
-            cout << "X";
-        }
-    }
-    void ChuongNgaiVatLevel2() {
-        if ((A[0].x == 11 || A[0].x == 30) && A[0].y >= 6 && A[0].y < 16) {
-            Die();
-        }
-    }
     void TaoMoiLevel2() {
         bool check;
         do {
@@ -134,19 +128,6 @@ public:
                 check = 1;
             else check = 0;
         } while (check);
-    }
-    void VeChuongNgaiVatLevel3() {
-        for (int i = 11; i < 31; i++) {
-            gotoxy(i, 6);
-            cout << "X";
-            gotoxy(i, 15);
-            cout << "X";
-        }
-    }
-    void ChuongNgaiVatLevel3() {
-        if ((A[0].y == 6 || A[0].y == 15) && A[0].x >= 11 && A[0].x < 31) {
-            Die();
-        }
     }
     void TaoMoiLevel3() {
         bool check;
@@ -159,6 +140,84 @@ public:
             else check = 0;
         } while (check);
     }
+    void TaoMoiLevel4() {
+        bool check;
+        do {
+            srand(time(NULL));
+            Moi.x = rand() % 40 + 1;
+            Moi.y = rand() % 20 + 1;
+            if ((Moi.y == 6 || Moi.y == 15) && ((Moi.x >= 6 && Moi.x < 18) || (Moi.x >= 24 && Moi.x < 36)))
+                check = 1;
+            else check = 0;
+        } while (check);
+    }
+    void TaoMoiLevel5() {
+        bool check;
+        do {
+            srand(time(NULL));
+            Moi.x = rand() % 40 + 1;
+            Moi.y = rand() % 20 + 1;
+            if (((Moi.y == 5 || Moi.y == 16) && ((Moi.x >= 6 && Moi.x < 18) || (Moi.x >= 24 && Moi.x < 36)))
+                || ((Moi.x == 6 || Moi.x == 35) && ((Moi.y >= 6 && Moi.y < 9) || (Moi.y >= 13 && Moi.y < 16))))
+                check = 1;
+            else check = 0;
+        } while (check);
+    }
+    void TaoMoiLevel6() {
+        bool check;
+        do {
+            srand(time(NULL));
+            Moi.x = rand() % 40 + 1;
+            Moi.y = rand() % 20 + 1;
+            if (((Moi.y == 5 || Moi.y == 16) && Moi.x >= 11 && Moi.x < 31) || ((Moi.x == 7 || Moi.x == 34) && Moi.y >= 6 && Moi.y < 16))
+                check = 1;
+            else check = 0;
+        } while (check);
+    }
+    void TaoMoiLevel7() {
+        bool check;
+        do {
+            srand(time(NULL));
+            Moi.x = rand() % 40 + 1;
+            Moi.y = rand() % 20 + 1;
+            if (((Moi.y == 4 || Moi.y == 17) && ((Moi.x >= 5 && Moi.x < 18) || (Moi.x >= 24 && Moi.x < 37)))
+                || ((Moi.x == 5 || Moi.x == 36) && ((Moi.y >= 5 && Moi.y < 10) || (Moi.y >= 12 && Moi.y < 17)))
+                || ((Moi.y == 8 || Moi.y == 13) && ((Moi.x >= 10 && Moi.x < 32))))
+                check = 1;
+            else check = 0;
+        } while (check);
+    }
+    void TaoMoiLevel8() {
+        bool check;
+        do {
+            srand(time(NULL));
+            Moi.x = rand() % 40 + 1;
+            Moi.y = rand() % 20 + 1;
+            if ((Moi.y == 4 && Moi.x >= 13 && Moi.x < 37) || (Moi.y == 17 && Moi.x >= 5 && Moi.x < 19)
+                || ((Moi.x == 5 || Moi.x == 36) && (Moi.y >= 4 && Moi.y < 18))
+                || ((Moi.x == 13 || Moi.x == 18) && (Moi.y >= 5 && Moi.y < 13))
+                || ((Moi.x == 23 || Moi.x == 28) && (Moi.y >= 9 && Moi.y < 17)))
+                check = 1;
+            else check = 0;
+        } while (check);
+    }
+
+    void VeChuongNgaiVatLevel2() {
+        for (int i = 6; i < 16; i++) {
+            gotoxy(11, i);
+            cout << "X";
+            gotoxy(30, i);
+            cout << "X";
+        }
+    }
+    void VeChuongNgaiVatLevel3() {
+        for (int i = 11; i < 31; i++) {
+            gotoxy(i, 6);
+            cout << "X";
+            gotoxy(i, 15);
+            cout << "X";
+        }
+    }
     void VeChuongNgaiVatLevel4() {
         for (int i = 6; i < 18; i++) {
             gotoxy(i, 6);
@@ -170,22 +229,6 @@ public:
             gotoxy(i + 18, 15);
             cout << "X";
         }
-    }
-    void ChuongNgaiVatLevel4() {
-        if ((A[0].y == 6 || A[0].y == 15) && ((A[0].x >= 6 && A[0].x < 18) || (A[0].x >= 24 && A[0].x < 36))) {
-            Die();
-        }
-    }
-    void TaoMoiLevel4() {
-        bool check;
-        do {
-            srand(time(NULL));
-            Moi.x = rand() % 40 + 1;
-            Moi.y = rand() % 20 + 1;
-            if ((Moi.y == 6 || Moi.y == 15) && ((Moi.x >= 6 && Moi.x < 18) || (Moi.x >= 24 && Moi.x < 36)))
-                check = 1;
-            else check = 0;
-        } while (check);
     }
     void VeChuongNgaiVatLevel5() {
         for (int i = 6; i < 18; i++) {
@@ -209,24 +252,6 @@ public:
             cout << "X";
         }
     }
-    void ChuongNgaiVatLevel5() {
-        if (((A[0].y == 5 || A[0].y == 16) && ((A[0].x >= 6 && A[0].x < 18) || (A[0].x >= 24 && A[0].x < 36)))
-            || ((A[0].x == 6 || A[0].x == 35) && ((A[0].y >= 6 && A[0].y < 9) || (A[0].y >= 13 && A[0].y < 16)))) {
-            Die();
-        }
-    }
-    void TaoMoiLevel5() {
-        bool check;
-        do {
-            srand(time(NULL));
-            Moi.x = rand() % 40 + 1;
-            Moi.y = rand() % 20 + 1;
-            if (((A[0].y == 5 || A[0].y == 16) && ((A[0].x >= 6 && A[0].x < 18) || (A[0].x >= 24 && A[0].x < 36)))
-                || ((A[0].x == 6 || A[0].x == 35) && ((A[0].y >= 6 && A[0].y < 9) || (A[0].y >= 13 && A[0].y < 16))))
-                check = 1;
-            else check = 0;
-        } while (check);
-    }
     void VeChuongNgaiVatLevel6() {
         for (int i = 11; i < 31; i++) {
             gotoxy(i, 5);
@@ -241,22 +266,105 @@ public:
             cout << "X";
         }
     }
+    void VeChuongNgaiVatLevel7() {
+        for (int i = 5; i < 18; i++) {
+            gotoxy(i, 4);
+            cout << "X";
+            gotoxy(i, 17);
+            cout << "X";
+        }
+        for (int i = 24; i < 37; i++) {
+            gotoxy(i, 4);
+            cout << "X";
+            gotoxy(i, 17);
+            cout << "X";
+        }
+        for (int i = 10; i < 32; i++) {
+            gotoxy(i, 8);
+            cout << "X";
+            gotoxy(i, 13);
+            cout << "X";
+        }
+        for (int i = 5; i < 10; i++) {
+            gotoxy(5, i);
+            cout << "X";
+            gotoxy(36, i);
+            cout << "X";
+        }
+        for (int i = 12; i < 17; i++) {
+            gotoxy(5, i);
+            cout << "X";
+            gotoxy(36, i);
+            cout << "X";
+        }
+    }
+    void VeChuongNgaiVatLevel8() {
+        for (int i = 4; i < 18; i++) {
+            gotoxy(5, i);
+            cout << "X";
+            gotoxy(36, i);
+            cout << "X";
+        }
+        for (int i = 13; i < 37; i++) {
+            gotoxy(i, 4);
+            cout << "X";
+            gotoxy(i - 8, 17);
+            cout << "X";
+        }
+        for (int i = 5; i < 13; i++) {
+            gotoxy(13, i);
+            cout << "X";
+            gotoxy(18, i);
+            cout << "X";
+            gotoxy(23, i + 4);
+            cout << "X";
+            gotoxy(28, i + 4);
+            cout << "X";
+        }
+    }
+
+    void ChuongNgaiVatLevel2() {
+        if ((A[0].x == 11 || A[0].x == 30) && A[0].y >= 6 && A[0].y < 16) {
+            Die();
+        }
+    }
+    void ChuongNgaiVatLevel3() {
+        if ((A[0].y == 6 || A[0].y == 15) && A[0].x >= 11 && A[0].x < 31) {
+            Die();
+        }
+    }
+    void ChuongNgaiVatLevel4() {
+        if ((A[0].y == 6 || A[0].y == 15) && ((A[0].x >= 6 && A[0].x < 18) || (A[0].x >= 24 && A[0].x < 36))) {
+            Die();
+        }
+    }
+    void ChuongNgaiVatLevel5() {
+        if (((A[0].y == 5 || A[0].y == 16) && ((A[0].x >= 6 && A[0].x < 18) || (A[0].x >= 24 && A[0].x < 36)))
+            || ((A[0].x == 6 || A[0].x == 35) && ((A[0].y >= 6 && A[0].y < 9) || (A[0].y >= 13 && A[0].y < 16)))) {
+            Die();
+        }
+    }
     void ChuongNgaiVatLevel6() {
         if (((A[0].y == 5 || A[0].y == 16) && A[0].x >= 11 && A[0].x < 31) || ((A[0].x == 7 || A[0].x == 34) && A[0].y >= 6 && A[0].y < 16)) {
             Die();
         }
     }
-    void TaoMoiLevel6() {
-        bool check;
-        do {
-            srand(time(NULL));
-            Moi.x = rand() % 40 + 1;
-            Moi.y = rand() % 20 + 1;
-            if (((A[0].y == 5 || A[0].y == 16) && A[0].x >= 11 && A[0].x < 31) || ((A[0].x == 7 || A[0].x == 34) && A[0].y >= 6 && A[0].y < 16))
-                check = 1;
-            else check = 0;
-        } while (check);
+    void ChuongNgaiVatLevel7() {
+        if (((A[0].y == 4 || A[0].y == 17) && ((A[0].x >= 5 && A[0].x < 18) || (A[0].x >= 24 && A[0].x < 37)))
+            || ((A[0].x == 5 || A[0].x == 36) && ((A[0].y >= 5 && A[0].y < 10) || (A[0].y >= 12 && A[0].y < 17)))
+            || ((A[0].y == 8 || A[0].y == 13) && ((A[0].x >= 10 && A[0].x < 32)))) {
+            Die();
+        }
     }
+    void ChuongNgaiVatLevel8() {
+        if ((A[0].y == 4 && A[0].x >= 13 && A[0].x < 37) || (A[0].y == 17 && A[0].x >= 5 && A[0].x < 29)
+            || ((A[0].x == 5 || A[0].x == 36) && (A[0].y >= 4 && A[0].y < 18))
+            || ((A[0].x == 13 || A[0].x == 18) && (A[0].y >= 5 && A[0].y < 13))
+            || ((A[0].x == 23 || A[0].x == 28) && (A[0].y >= 9 && A[0].y < 17))) {
+            Die();
+        }
+    }
+
     void Start() {                                                          //Xử lý chính
         int Huong = 0;
         char t;
@@ -269,6 +377,8 @@ public:
         case 4: TaoMoiLevel4(); break;
         case 5: TaoMoiLevel5(); break;
         case 6: TaoMoiLevel6(); break;
+        case 7: TaoMoiLevel7(); break;
+        case 8: TaoMoiLevel8(); break;
         default:
             break;
         }
@@ -287,18 +397,52 @@ public:
             XoaRan();
             VeRanVaMoi();
             DiChuyen(Huong);
-            gotoxy(52, 9);
+            gotoxy(45, 13);
             Sleep(320 / DoKho);
         }
     }
     void Die() {
-        gotoxy(15, 9);
-        printf("GAME OVER!");
-        gotoxy(14, 10);
-        printf("Your score: %d.", (DoDai - 3) * DoKho);
-        gotoxy(10, 11);
-        if ((DoDai - 3) * DoKho >= DoKho * 10 + 2 * Level) printf("You was unlock level %d.", ++LevelUnlock);
-        Sleep(3000);
+        int l = 1;
+        char t = 'c';
+        gotoxy(6, 8);
+        printf("                          ");
+        gotoxy(6, 9);
+        printf("                          ");
+        gotoxy(6, 10);
+        printf("                          ");
+        gotoxy(6, 11);
+        printf("                          ");
+        gotoxy(6, 12);
+        printf("                          ");
+        gotoxy(14, 9);
+        printf("  GAME OVER! ");
+        gotoxy(12, 10);
+        printf("  Your score: %d. ", (DoDai - 3) * DoKho);
+        gotoxy(8, 11);
+        if ((DoDai - 3) * DoKho >= DoKho * 10 + 2 * Level)
+            if (LevelUnlock == 8) printf(" Congratulation! You are end this game. ");
+            else printf(" You was unlock level %d. ", ++LevelUnlock);
+        do {
+            gotoxy(7, 14);
+            printf("  Press Spacebar to Continue ");
+            if (l == 1) {
+                gotoxy(5, 15);
+                printf(" .----------------------------. ");
+                gotoxy(5, 16);
+                printf(" |____________________________| ");
+            }
+            else {
+                gotoxy(5, 15);
+                printf("                                ");
+                gotoxy(5, 16);
+                printf(" .----------------------------. ");
+            }
+            if (_kbhit()) {
+                t = _getch();
+            }
+            l = -l;
+            Sleep(350);
+        } while (t != ' ');
         Menu();                              //Trở về Menu chính
     }
     void ChooseLevel() {                    //Chọn màn chơi
@@ -313,7 +457,7 @@ public:
                 }
                 cout << endl;
             }
-            cout << "Choose level to play :";
+            cout << "Choose level to play : ";
             cin >> Level;
         } while (Level > LevelUnlock || Level < 1);
     };
@@ -326,9 +470,9 @@ public:
     };
     void Menu() {
         DoDai = 3; LastDirection = 'd';
-        A[0].x = 19; A[0].y = 10;
-        A[1].x = 20; A[1].y = 10;
-        A[2].x = 21; A[2].y = 10;
+        A[0].x = 18; A[0].y = 19;
+        A[1].x = 17; A[1].y = 19;
+        A[2].x = 16; A[2].y = 19;
         char choice;
         do {
             system("cls");
