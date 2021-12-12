@@ -1,24 +1,34 @@
 ﻿#include <iostream>
 #include <windows.h>
-#include <cstdlib>
 #include <conio.h>
 #include <ctime>
 using namespace std;
-void gotoxy(int column, int line);
+
 struct Point {
     int x, y;
 };
-class CONRAN {
+
+class GAME {
 public:
     struct Point A[800];
     struct Point Moi;
-    int DoDai, DoKho, Level, LevelUnlock;
+    int DoDai, DoKho, Level, LevelUnlocked, DieStatus;
     char LastDirection;
 
-    CONRAN() {
-        Moi.x = 0; Moi.y = 0;
-        DoDai = 3; DoKho = 2; Level = 1; LevelUnlock = 8;
-        LastDirection = 'd';
+
+    GAME() {
+        DoKho = 2; LevelUnlocked = 1;
+        DoDai = 3; Level = 0; DieStatus = 0;
+    }
+    void gotoxy(int x, int y)
+    {
+        COORD coord;
+        coord.X = x;
+        coord.Y = y;
+        SetConsoleCursorPosition(
+            GetStdHandle(STD_OUTPUT_HANDLE),
+            coord
+        );
     }
     void VeTuongVaCNV() {
         for (int j = 0; j < 42; j++) {                                      //Vẽ tường
@@ -52,28 +62,26 @@ public:
             gotoxy(A[i].x, A[i].y);
             cout << "X";
         }
-        gotoxy(Moi.x, Moi.y);                                               //Xóa mồi
-        cout << " ";
         gotoxy(Moi.x, Moi.y);                                               //Vẽ mồi
         cout << "X";
-        gotoxy(45, 9);                                                      //Ghi điểm
-        printf("Scores: %d", (DoDai - 3) * DoKho);
     }
-    void XoaRan() {
-        for (int i = 0; i <= DoDai; i++) {                                   //Vẽ rắn
-            gotoxy(A[i].x, A[i].y);
-            cout << " ";
-        }
+    void XoaRan() {                                 //Xóa rắn
+        gotoxy(A[DoDai].x, A[DoDai].y);
+        cout << " ";
     }
     void DiChuyen(int Huong) {
         for (int i = DoDai; i > 0; i--)
             A[i] = A[i - 1];
+
         if (Huong == 0) A[0].x = A[0].x + 1;
         if (Huong == 1) A[0].y = A[0].y + 1;
         if (Huong == 2) A[0].x = A[0].x - 1;
         if (Huong == 3) A[0].y = A[0].y - 1;
+
         if (A[0].x == Moi.x && A[0].y == Moi.y) {
             DoDai++;                                                            //Tăng độ dài
+            gotoxy(45, 9);                                                      //Cập nhật điểm 
+            printf("Your score: %d", (DoDai - 3) * DoKho);
             switch (Level)
             {
             case 1: TaoMoiLevel1(); break;
@@ -87,12 +95,11 @@ public:
             default:
                 break;
             }
-
         }
-        if (A[0].x == 0 || A[0].x == 41 || A[0].y == 0 || A[0].y == 21) {   //Tông tường = die
+        if (A[0].x == 0 || A[0].x == 41 || A[0].y == 0 || A[0].y == 21) {       //Tông tường = die
             Die();
         }
-        switch (Level)                                                      //Die vì chướng ngại vật theo độ khó
+        switch (Level)                                                          //Tông chướng ngại vật = die
         {
         case 1: break;
         case 2: ChuongNgaiVatLevel2(); break;
@@ -105,101 +112,57 @@ public:
         default:
             break;
         }
-        for (int i = DoDai - 1; i > 3; i--) {                               //Cắn cơ thể = die
+        for (int i = DoDai - 1; i > 3; i--) {                                   //Cắn cơ thể = die
             if (A[0].x == A[i].x && A[0].y == A[i].y) {
                 Die();
             }
         }
 
     }
-
-    void TaoMoiLevel1() {                                                         //Tạo mồi
-        srand(time(NULL));
-        Moi.x = rand() % 40 + 1;
-        Moi.y = rand() % 20 + 1;
-    };
-    void TaoMoiLevel2() {
-        bool check;
+    void Die() {
+        int l = 1;
+        char t = 't';
+        gotoxy(6, 8);
+        printf("                          ");
+        gotoxy(6, 9);
+        printf("                          ");
+        gotoxy(6, 10);
+        printf("                          ");
+        gotoxy(6, 11);
+        printf("                          ");
+        gotoxy(6, 12);
+        printf("                          ");
+        gotoxy(14, 9);
+        printf("  GAME OVER! ");
+        gotoxy(12, 10);
+        printf("  Your score: %d. ", (DoDai - 3) * DoKho);
+        gotoxy(8, 11);
+        if ((DoDai - 3) * DoKho >= DoKho * 10 + 2 * Level)
+            if (LevelUnlocked == 8) printf(" Congratulations! You won this game!.");
+            else printf(" You unlocked level %d. ", ++LevelUnlocked);
         do {
-            srand(time(NULL));
-            Moi.x = rand() % 40 + 1;
-            Moi.y = rand() % 20 + 1;
-            if ((Moi.x == 11 || Moi.x == 30) && Moi.y >= 6 && Moi.y < 16)
-                check = 1;
-            else check = 0;
-        } while (check);
-    }
-    void TaoMoiLevel3() {
-        bool check;
-        do {
-            srand(time(NULL));
-            Moi.x = rand() % 40 + 1;
-            Moi.y = rand() % 20 + 1;
-            if ((Moi.y == 6 || Moi.y == 15) && Moi.x >= 11 && Moi.x < 31)
-                check = 1;
-            else check = 0;
-        } while (check);
-    }
-    void TaoMoiLevel4() {
-        bool check;
-        do {
-            srand(time(NULL));
-            Moi.x = rand() % 40 + 1;
-            Moi.y = rand() % 20 + 1;
-            if ((Moi.y == 6 || Moi.y == 15) && ((Moi.x >= 6 && Moi.x < 18) || (Moi.x >= 24 && Moi.x < 36)))
-                check = 1;
-            else check = 0;
-        } while (check);
-    }
-    void TaoMoiLevel5() {
-        bool check;
-        do {
-            srand(time(NULL));
-            Moi.x = rand() % 40 + 1;
-            Moi.y = rand() % 20 + 1;
-            if (((Moi.y == 5 || Moi.y == 16) && ((Moi.x >= 6 && Moi.x < 18) || (Moi.x >= 24 && Moi.x < 36)))
-                || ((Moi.x == 6 || Moi.x == 35) && ((Moi.y >= 6 && Moi.y < 9) || (Moi.y >= 13 && Moi.y < 16))))
-                check = 1;
-            else check = 0;
-        } while (check);
-    }
-    void TaoMoiLevel6() {
-        bool check;
-        do {
-            srand(time(NULL));
-            Moi.x = rand() % 40 + 1;
-            Moi.y = rand() % 20 + 1;
-            if (((Moi.y == 5 || Moi.y == 16) && Moi.x >= 11 && Moi.x < 31) || ((Moi.x == 7 || Moi.x == 34) && Moi.y >= 6 && Moi.y < 16))
-                check = 1;
-            else check = 0;
-        } while (check);
-    }
-    void TaoMoiLevel7() {
-        bool check;
-        do {
-            srand(time(NULL));
-            Moi.x = rand() % 40 + 1;
-            Moi.y = rand() % 20 + 1;
-            if (((Moi.y == 4 || Moi.y == 17) && ((Moi.x >= 5 && Moi.x < 18) || (Moi.x >= 24 && Moi.x < 37)))
-                || ((Moi.x == 5 || Moi.x == 36) && ((Moi.y >= 5 && Moi.y < 10) || (Moi.y >= 12 && Moi.y < 17)))
-                || ((Moi.y == 8 || Moi.y == 13) && ((Moi.x >= 10 && Moi.x < 32))))
-                check = 1;
-            else check = 0;
-        } while (check);
-    }
-    void TaoMoiLevel8() {
-        bool check;
-        do {
-            srand(time(NULL));
-            Moi.x = rand() % 40 + 1;
-            Moi.y = rand() % 20 + 1;
-            if ((Moi.y == 4 && Moi.x >= 13 && Moi.x < 37) || (Moi.y == 17 && Moi.x >= 5 && Moi.x < 19)
-                || ((Moi.x == 5 || Moi.x == 36) && (Moi.y >= 4 && Moi.y < 18))
-                || ((Moi.x == 13 || Moi.x == 18) && (Moi.y >= 5 && Moi.y < 13))
-                || ((Moi.x == 23 || Moi.x == 28) && (Moi.y >= 9 && Moi.y < 17)))
-                check = 1;
-            else check = 0;
-        } while (check);
+            gotoxy(7, 14);
+            printf("  Press Spacebar to continue ");
+            if (l == 1) {
+                gotoxy(5, 15);
+                printf(" .----------------------------. ");
+                gotoxy(5, 16);
+                printf(" |____________________________| ");
+            }
+            else {
+                gotoxy(5, 15);
+                printf("                                ");
+                gotoxy(5, 16);
+                printf(" .----------------------------. ");
+            }
+            if (_kbhit()) {
+                t = _getch();
+                if (t == ' ') break;
+            }
+            l = -l;
+            Sleep(350);
+        } while (1);
+        DieStatus = 1;                            //Trở về Menu chính
     }
 
     void VeChuongNgaiVatLevel2() {
@@ -365,7 +328,117 @@ public:
         }
     }
 
+    void TaoMoiLevel1() {                                                       //Tạo mồi
+        srand(time(NULL));
+        Moi.x = rand() % 40 + 1;
+        Moi.y = rand() % 20 + 1;
+    };
+    void TaoMoiLevel2() {
+        bool check;
+        do {
+            srand(time(NULL));
+            Moi.x = rand() % 40 + 1;
+            Moi.y = rand() % 20 + 1;
+            if ((Moi.x == 11 || Moi.x == 30) && Moi.y >= 6 && Moi.y < 16)
+                check = 1;
+            else check = 0;
+        } while (check);
+    }
+    void TaoMoiLevel3() {
+        bool check;
+        do {
+            srand(time(NULL));
+            Moi.x = rand() % 40 + 1;
+            Moi.y = rand() % 20 + 1;
+            if ((Moi.y == 6 || Moi.y == 15) && Moi.x >= 11 && Moi.x < 31)
+                check = 1;
+            else check = 0;
+        } while (check);
+    }
+    void TaoMoiLevel4() {
+        bool check;
+        do {
+            srand(time(NULL));
+            Moi.x = rand() % 40 + 1;
+            Moi.y = rand() % 20 + 1;
+            if ((Moi.y == 6 || Moi.y == 15) && ((Moi.x >= 6 && Moi.x < 18) || (Moi.x >= 24 && Moi.x < 36)))
+                check = 1;
+            else check = 0;
+        } while (check);
+    }
+    void TaoMoiLevel5() {
+        bool check;
+        do {
+            srand(time(NULL));
+            Moi.x = rand() % 40 + 1;
+            Moi.y = rand() % 20 + 1;
+            if (((Moi.y == 5 || Moi.y == 16) && ((Moi.x >= 6 && Moi.x < 18) || (Moi.x >= 24 && Moi.x < 36)))
+                || ((Moi.x == 6 || Moi.x == 35) && ((Moi.y >= 6 && Moi.y < 9) || (Moi.y >= 13 && Moi.y < 16))))
+                check = 1;
+            else check = 0;
+        } while (check);
+    }
+    void TaoMoiLevel6() {
+        bool check;
+        do {
+            srand(time(NULL));
+            Moi.x = rand() % 40 + 1;
+            Moi.y = rand() % 20 + 1;
+            if (((Moi.y == 5 || Moi.y == 16) && Moi.x >= 11 && Moi.x < 31) || ((Moi.x == 7 || Moi.x == 34) && Moi.y >= 6 && Moi.y < 16))
+                check = 1;
+            else check = 0;
+        } while (check);
+    }
+    void TaoMoiLevel7() {
+        bool check;
+        do {
+            srand(time(NULL));
+            Moi.x = rand() % 40 + 1;
+            Moi.y = rand() % 20 + 1;
+            if (((Moi.y == 4 || Moi.y == 17) && ((Moi.x >= 5 && Moi.x < 18) || (Moi.x >= 24 && Moi.x < 37)))
+                || ((Moi.x == 5 || Moi.x == 36) && ((Moi.y >= 5 && Moi.y < 10) || (Moi.y >= 12 && Moi.y < 17)))
+                || ((Moi.y == 8 || Moi.y == 13) && ((Moi.x >= 10 && Moi.x < 32))))
+                check = 1;
+            else check = 0;
+        } while (check);
+    }
+    void TaoMoiLevel8() {
+        bool check;
+        do {
+            srand(time(NULL));
+            Moi.x = rand() % 40 + 1;
+            Moi.y = rand() % 20 + 1;
+            if ((Moi.y == 4 && Moi.x >= 13 && Moi.x < 37) || (Moi.y == 17 && Moi.x >= 5 && Moi.x < 19)
+                || ((Moi.x == 5 || Moi.x == 36) && (Moi.y >= 4 && Moi.y < 18))
+                || ((Moi.x == 13 || Moi.x == 18) && (Moi.y >= 5 && Moi.y < 13))
+                || ((Moi.x == 23 || Moi.x == 28) && (Moi.y >= 9 && Moi.y < 17)))
+                check = 1;
+            else check = 0;
+        } while (check);
+    }
+
+    void Menu() {
+        char choice;
+        do {
+            system("cls");
+            printf("SNAKE\n1.Start\n2.Setting\n3.Quit game\nType your choice (1->3): ");
+            do {
+                cin >> choice;
+            } while (choice != '1' && choice != '2' && choice != '3');
+            switch (choice)
+            {
+            case '1': Start(); break;
+            case '2': Setting(); break;
+            case '3': exit(0); break;
+            }
+        } while (1);
+    }
+
     void Start() {                                                          //Xử lý chính
+        DoDai = 3; LastDirection = 'd'; DieStatus = 0;
+        A[0].x = 18; A[0].y = 19;
+        A[1].x = 17; A[1].y = 19;
+        A[2].x = 16; A[2].y = 19;
         int Huong = 0;
         char t;
         ChooseLevel();
@@ -384,9 +457,11 @@ public:
         }
         system("cls");
         VeTuongVaCNV();
+        gotoxy(45, 9);                                                      //Ghi điểm 
+        printf("Your score: 0");
         gotoxy(45, 11);                                                     //Hiển thị độ khó
-        printf("Difficult: %d", DoKho);
-        while (1) {
+        printf("Difficulty: %d", DoKho);
+        do {
             if (_kbhit()) {
                 t = _getch();
                 if (t == 'a' && LastDirection != 'd') { Huong = 2; LastDirection = t; }
@@ -399,112 +474,57 @@ public:
             DiChuyen(Huong);
             gotoxy(45, 13);
             Sleep(320 / DoKho);
-        }
+        } while (DieStatus == 0);
     }
-    void Die() {
-        int l = 1;
-        char t = 'c';
-        gotoxy(6, 8);
-        printf("                          ");
-        gotoxy(6, 9);
-        printf("                          ");
-        gotoxy(6, 10);
-        printf("                          ");
-        gotoxy(6, 11);
-        printf("                          ");
-        gotoxy(6, 12);
-        printf("                          ");
-        gotoxy(14, 9);
-        printf("  GAME OVER! ");
-        gotoxy(12, 10);
-        printf("  Your score: %d. ", (DoDai - 3) * DoKho);
-        gotoxy(8, 11);
-        if ((DoDai - 3) * DoKho >= DoKho * 10 + 2 * Level)
-            if (LevelUnlock == 8) printf(" Congratulation! You are end this game. ");
-            else printf(" You was unlock level %d. ", ++LevelUnlock);
-        do {
-            gotoxy(7, 14);
-            printf("  Press Spacebar to Continue ");
-            if (l == 1) {
-                gotoxy(5, 15);
-                printf(" .----------------------------. ");
-                gotoxy(5, 16);
-                printf(" |____________________________| ");
-            }
-            else {
-                gotoxy(5, 15);
-                printf("                                ");
-                gotoxy(5, 16);
-                printf(" .----------------------------. ");
-            }
-            if (_kbhit()) {
-                t = _getch();
-            }
-            l = -l;
-            Sleep(350);
-        } while (t != ' ');
-        Menu();                              //Trở về Menu chính
-    }
+
     void ChooseLevel() {                    //Chọn màn chơi
         do {
             system("cls");
             printf("CHOOSE A LEVEL:\n1.Level 1.\n");
             for (int i = 2; i < 9; i++) {
-                if (i <= LevelUnlock) printf("%d.Level %d.", i, i);
+                if (i <= LevelUnlocked) printf("%d.Level %d.", i, i);
                 else {
                     printf("%d.Level %d. LOCKED ", i, i);
-                    if (i == LevelUnlock + 1) printf("- Reach %d point at Level %d to unlock!", DoKho * 10 + 2 * i, i - 1);
+                    if (i == LevelUnlocked + 1) printf("- Reach %d Point at Level %d to unlock!", DoKho * 10 + 2 * i, i - 1);
                 }
                 cout << endl;
             }
             cout << "Choose level to play : ";
             cin >> Level;
-        } while (Level > LevelUnlock || Level < 1);
+        } while (Level > LevelUnlocked || Level < 1);
     };
+
     void Setting() {
         system("cls");
-        printf("SETTING\nCurrent difficult: %d\nDifficult selection (1 -> 8): ", DoKho);
+        printf("SETTINGS\nCurrent difficulty: %d\nDifficulty selection (1 -> 8): ", DoKho);
         do {
             cin >> DoKho;
         } while (DoKho > 8 || DoKho < 1);
     };
-    void Menu() {
-        DoDai = 3; LastDirection = 'd';
-        A[0].x = 18; A[0].y = 19;
-        A[1].x = 17; A[1].y = 19;
-        A[2].x = 16; A[2].y = 19;
-        char choice;
-        do {
-            system("cls");
-            printf("SNAKE\n1.Start\n2.Setting\n3.Quit game\nType you choose (1->3): ");
-            do {
-                cin >> choice;
-            } while (choice != '1' && choice != '2' && choice != '3');
-            switch (choice)
-            {
-            case '1': Start(); break;
-            case '2': Setting(); break;
-            case '3': exit(0); break;
-            }
-        } while (1);
-    }
+
 };
+
+void SetWindowSize(SHORT width, SHORT height)
+{
+    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    SMALL_RECT WindowSize;
+    WindowSize.Top = 0;
+    WindowSize.Left = 0;
+    WindowSize.Right = width;
+    WindowSize.Bottom = height;
+
+    SetConsoleWindowInfo(hStdout, 1, &WindowSize);
+}
 
 int main()
 {
-    CONRAN r;
-    r.Menu();
+    SetWindowSize(60, 22);
+    GAME Game;
+    Game.Menu();
     return 0;
 }
 
 
-void gotoxy(int column, int line)
-{
-    COORD coord;
-    coord.X = column;
-    coord.Y = line;
-    SetConsoleCursorPosition(
-        GetStdHandle(STD_OUTPUT_HANDLE),
-        coord
-    );
-}
+
+
