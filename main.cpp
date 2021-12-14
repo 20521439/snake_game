@@ -3,7 +3,6 @@
 #include <conio.h>
 #include <ctime>
 using namespace std;
-void gotoxy(int, int);
 void set_color(int code)
 {
     HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -23,6 +22,7 @@ public:
         DoKho = 2; LevelUnlocked = 1;
         DoDai = 3; Level = 0; DieStatus = 0;
         Language = 2;
+
     }
     void gotoxy(int x, int y)
     {
@@ -51,7 +51,6 @@ public:
             cout << char(222);
             gotoxy(41, j);
             cout << char(221);
-
         }
         switch (Level)
         {
@@ -67,6 +66,7 @@ public:
             break;
         }
     }
+
     void VeRanVaMoi()
     {
         set_color(16 * 0 + 2);
@@ -77,6 +77,7 @@ public:
         }
         gotoxy(Moi.x, Moi.y);                                               //Vẽ mồi
         cout << char(254);
+
     }
     void XoaRan() {                                 //Xóa rắn
         gotoxy(A[DoDai].x, A[DoDai].y);
@@ -100,6 +101,7 @@ public:
                 printf("Diem so: %d", (DoDai - 3) * DoKho);
             else
                 printf("Your score: %d", (DoDai - 3) * DoKho);
+
             switch (Level)
             {
             case 1: TaoMoiLevel1(); break;
@@ -151,6 +153,7 @@ public:
         printf("                          ");
         gotoxy(6, 12);
         printf("                          ");
+
         gotoxy(14, 8);
         if (Language == 1)
             printf("  KET THUC! ");
@@ -449,6 +452,7 @@ public:
             else check = 0;
         } while (check);
     }
+
     void Menu() {
 
         SetWindowSize(60, 22);
@@ -462,6 +466,7 @@ public:
                 printf("TRO CHOI CON RAN\n1.Bat dau\n2.Cai dat\n3.Thoat \nNhap lua chon cua ban (1->3): ");
             else
                 printf("SNAKE GAME\n1.Start\n2.Setting\n3.Quit game\nType your choice (1->3): ");
+
             do {
                 cin >> choice;
             } while (choice != '1' && choice != '2' && choice != '3');
@@ -475,6 +480,7 @@ public:
     }
 
     void Start() {                                                          //Xử lý chính     
+
         DoDai = 3; LastDirection = 'd'; DieStatus = 0;
         A[0].x = 18; A[0].y = 19;
         A[1].x = 17; A[1].y = 19;
@@ -483,6 +489,7 @@ public:
         char t;
         ChooseLevel();
         SetWindowSize(60, 22);
+
         switch (Level)                                                      //Tạo mồi theo Level
         {
         case 1: TaoMoiLevel1(); break;
@@ -517,6 +524,7 @@ public:
                 if ((t == 'w' || t == 'W') && LastDirection != 's') { Huong = 3; LastDirection = t; }
                 if ((t == 'd' || t == 'D') && LastDirection != 'a') { Huong = 0; LastDirection = t; }
                 if ((t == 's' || t == 'S') && LastDirection != 'w') { Huong = 1; LastDirection = t; }
+
             }
             XoaRan();
             VeRanVaMoi();
@@ -557,10 +565,12 @@ public:
                 cout << "Choose level to play : ";
                 cin >> Level;
             } while (Level > LevelUnlocked || Level < 1);
+
     };
 
     void Setting() {
         system("cls");
+
         char choice = 'c';
         do {
             if (Language == 1)
@@ -698,6 +708,7 @@ public:
 int main()
 {
     system("title SNAKE GAME-TRO CHOI CON RAN-3K1T");
+
     GAME Game;
     Game.Menu();
     return 0;
