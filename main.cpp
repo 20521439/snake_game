@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <windows.h>
 #include <conio.h>
 #include <ctime>
@@ -34,7 +34,7 @@ public:
     }
     void VeTuongVaCNV()
 	{
-		set_color(16*11+4);
+		set_color(16*15+3);
        for (int j = 1; j < 42; j++)
         {
             gotoxy(j, 0);
@@ -67,16 +67,16 @@ public:
     }
     void VeRanVaMoi() 
 	{
-		set_color(16*11+3);
+		set_color(16*15+2);
         for (int i = 0; i < DoDai; i++) 
 		{                                  
             gotoxy(A[i].x, A[i].y);
             cout <<char(254);
         }
-        gotoxy(Moi.x, Moi.y);                                               //V? m?i
+        gotoxy(Moi.x, Moi.y);                                               //Vẽ mồi
         cout<<char(254);
     }
-    void XoaRan() {                                 //Xóa r?n
+    void XoaRan() {                                 //Xóa rắn
         gotoxy(A[DoDai].x, A[DoDai].y);
         cout << " ";
     }
@@ -90,8 +90,8 @@ public:
         if (Huong == 3) A[0].y = A[0].y - 1;
 
         if (A[0].x == Moi.x && A[0].y == Moi.y) {
-            DoDai++;                                                            //Tang d? dài
-            gotoxy(45, 9);                                                      //C?p nh?t di?m 
+            DoDai++;                                                            //Tăng độ dài
+            gotoxy(45, 9);                                                      //Cập nhật điểm 
             printf("Your score: %d", (DoDai - 3) * DoKho);
             switch (Level)
             {
@@ -107,10 +107,10 @@ public:
                 break;
             }
         }
-        if (A[0].x == 0 || A[0].x == 41 || A[0].y == 0 || A[0].y == 21) {       //Tông tu?ng = die
+        if (A[0].x == 0 || A[0].x == 41 || A[0].y == 0 || A[0].y == 21) {       //Tông tường = die
             Die();
         }
-        switch (Level)                                                          //Tông chu?ng ng?i v?t = die
+        switch (Level)                                                          //Tông chướng ngại vật = die
         {
         case 1: break;
         case 2: ChuongNgaiVatLevel2(); break;
@@ -123,7 +123,7 @@ public:
         default:
             break;
         }
-        for (int i = DoDai - 1; i > 3; i--) {                                   //C?n co th? = die
+        for (int i = DoDai - 1; i > 3; i--) {                                   //Cắn cơ thể = die
             if (A[0].x == A[i].x && A[0].y == A[i].y) {
                 Die();
             }
@@ -173,7 +173,7 @@ public:
             l = -l;
             Sleep(350);
         } while (1);
-        DieStatus = 1;                            //Tr? v? Menu chính
+        DieStatus = 1;                            //Trở về Menu chính
     }
 
     void VeChuongNgaiVatLevel2() {
@@ -339,7 +339,7 @@ public:
         }
     }
 
-    void TaoMoiLevel1() {                                                       //T?o m?i
+    void TaoMoiLevel1() {                                                       //Tạo mồi
         srand(time(NULL));
         Moi.x = rand() % 40 + 1;
         Moi.y = rand() % 20 + 1;
@@ -445,7 +445,7 @@ public:
         } while (1);
     }
 
-    void Start() {                                                          //X? lý chính
+    void Start() {                                                          //Xử lý chính
         DoDai = 3; LastDirection = 'd'; DieStatus = 0;
         A[0].x = 18; A[0].y = 19;
         A[1].x = 17; A[1].y = 19;
@@ -453,7 +453,7 @@ public:
         int Huong = 0;
         char t;
         ChooseLevel();
-        switch (Level)                                                      //T?o m?i theo Level
+        switch (Level)                                                      //Tạo mồi theo Level
         {
         case 1: TaoMoiLevel1(); break;
         case 2: TaoMoiLevel2(); break;
@@ -468,9 +468,9 @@ public:
         }
         system("cls");
         VeTuongVaCNV();
-        gotoxy(45, 9);                                                      //Ghi di?m 
+        gotoxy(45, 9);                                                      //Ghi điểm 
         printf("Your score: 0");
-        gotoxy(45, 11);                                                     //Hi?n th? d? khó
+        gotoxy(45, 11);                                                     //Hiển thị độ khó
         printf("Difficulty: %d", DoKho);
         do {
             if (_kbhit()) {
@@ -488,7 +488,7 @@ public:
         } while (DieStatus == 0);
     }
 
-    void ChooseLevel() {                    //Ch?n màn choi
+    void ChooseLevel() {                    //Chọn màn choi
         do {
             system("cls");
             printf("CHOOSE A LEVEL:\n1.Level 1.\n");
@@ -527,7 +527,7 @@ void SetWindowSize(SHORT width, SHORT height)
 
     SetConsoleWindowInfo(hStdout, 1, &WindowSize);
 }
-void MainMenu(int& n)                                                                      //Menu phía ngoài tru?c khi vào game
+void MainMenu(int& n)                                                                      //Menu phía ngoài trước khi vào game
 {
     cout << "\t\t\tCHAO MUNG CAC BAN DEN VOI TRO CHOI CON RAN\n";
     cout << "\t\t\tWELCOME TO SNAKE GAME\n";
@@ -573,8 +573,10 @@ void MainMenu(int& n)                                                           
 int main()
 {
     int n;
-    system("color b4");
+    system("title SNAKE GAME-TRO CHOI CON RAN-3K1T");
+    system("color FC");
     MainMenu(n);
+    set_color(16*15+2);
     SetWindowSize(60, 22);
     GAME Game;
     Game.Menu();
