@@ -3,10 +3,10 @@
 #include <conio.h>
 #include <ctime>
 using namespace std;
-void set_color ( int code ) 
+void set_color(int code)
 {
     HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute( color , code );
+    SetConsoleTextAttribute(color, code);
 }
 struct Point {
     int x, y;
@@ -16,11 +16,13 @@ class GAME {
 public:
     struct Point A[800];
     struct Point Moi;
-    int DoDai, DoKho, Level, LevelUnlocked, DieStatus;
+    int DoDai, DoKho, Level, LevelUnlocked, DieStatus, Language;
     char LastDirection;
-	GAME() {
+    GAME() {
         DoKho = 2; LevelUnlocked = 1;
         DoDai = 3; Level = 0; DieStatus = 0;
+        Language = 2;
+
     }
     void gotoxy(int x, int y)
     {
@@ -33,25 +35,24 @@ public:
         );
     }
     void VeTuongVaCNV()
-	{
-		set_color(16*15+3);
-       for (int j = 1; j < 42; j++)
+    {
+        set_color(16 * 0 + 3);
+        for (int j = 1; j < 42; j++)
         {
             gotoxy(j, 0);
             cout << char(219);
             gotoxy(j, 21);
             cout << char(219);
         }
-        
+
         for (int j = 0; j < 22; j++)
         {
             gotoxy(0, j);
             cout << char(222);
             gotoxy(41, j);
             cout << char(221);
-    	
-		}
-        switch (Level)                                                    
+        }
+        switch (Level)
         {
         case 1: break;
         case 2: VeChuongNgaiVatLevel2();  break;
@@ -65,16 +66,18 @@ public:
             break;
         }
     }
-    void VeRanVaMoi() 
-	{
-		set_color(16*15+2);
-        for (int i = 0; i < DoDai; i++) 
-		{                                  
+
+    void VeRanVaMoi()
+    {
+        set_color(16 * 0 + 2);
+        for (int i = 0; i < DoDai; i++)
+        {
             gotoxy(A[i].x, A[i].y);
-            cout <<char(254);
+            cout << char(254);
         }
         gotoxy(Moi.x, Moi.y);                                               //Vẽ mồi
-        cout<<char(254);
+        cout << char(254);
+
     }
     void XoaRan() {                                 //Xóa rắn
         gotoxy(A[DoDai].x, A[DoDai].y);
@@ -92,7 +95,13 @@ public:
         if (A[0].x == Moi.x && A[0].y == Moi.y) {
             DoDai++;                                                            //Tăng độ dài
             gotoxy(45, 9);                                                      //Cập nhật điểm 
-            printf("Your score: %d", (DoDai - 3) * DoKho);
+            if (((DoDai - 3) * DoKho >= DoKho * 10 + 2 * Level) && LevelUnlocked == Level) set_color(2);
+            else set_color(15);
+            if (Language == 1)
+                printf("Diem so: %d", (DoDai - 3) * DoKho);
+            else
+                printf("Your score: %d", (DoDai - 3) * DoKho);
+
             switch (Level)
             {
             case 1: TaoMoiLevel1(); break;
@@ -132,6 +141,7 @@ public:
     }
     void Die() {
         int l = 1;
+        set_color(14);
         char t = 't';
         gotoxy(6, 8);
         printf("                          ");
@@ -143,17 +153,32 @@ public:
         printf("                          ");
         gotoxy(6, 12);
         printf("                          ");
-        gotoxy(14, 9);
-        printf("  GAME OVER! ");
+
+        gotoxy(14, 8);
+        if (Language == 1)
+            printf("  KET THUC! ");
+        else
+            printf("  GAME OVER! ");
         gotoxy(12, 10);
-        printf("  Your score: %d. ", (DoDai - 3) * DoKho);
+        if (Language == 1)
+            printf("   Diem so: %d. ", (DoDai - 3) * DoKho);
+        else
+            printf("  Your score: %d. ", (DoDai - 3) * DoKho);
         gotoxy(8, 11);
         if ((DoDai - 3) * DoKho >= DoKho * 10 + 2 * Level)
-            if (LevelUnlocked == 8) printf(" Congratulations! You won this game!.");
-            else printf(" You unlocked level %d. ", ++LevelUnlocked);
+            if (Level == 8) {
+                if (Language == 1) printf(" Chuc mung, ban da PHA DAO tro choi!");
+                else printf(" Congratulations! You won this game!.");
+            }
+            else {
+                if (Language == 1) printf("  Ban da mo khoa man choi %d. ", ++LevelUnlocked);
+                else                printf("  You unlocked level %d. ", ++LevelUnlocked);
+            }
         do {
             gotoxy(7, 14);
-            printf("  Press Spacebar to continue ");
+            if (Language == 1) printf("  Nhan Spacebar de tiep tuc  ");
+            else
+                printf("  Press Spacebar to continue ");
             if (l == 1) {
                 gotoxy(5, 15);
                 printf(" .----------------------------. ");
@@ -429,10 +454,19 @@ public:
     }
 
     void Menu() {
+
+        SetWindowSize(60, 22);
+        ChooseLanguage();
+
         char choice;
         do {
+            set_color(11);
             system("cls");
-            printf("SNAKE\n1.Start\n2.Setting\n3.Quit game\nType your choice (1->3): ");
+            if (Language == 1)
+                printf("TRO CHOI CON RAN\n1.Bat dau\n2.Cai dat\n3.Thoat \nNhap lua chon cua ban (1->3): ");
+            else
+                printf("SNAKE GAME\n1.Start\n2.Setting\n3.Quit game\nType your choice (1->3): ");
+
             do {
                 cin >> choice;
             } while (choice != '1' && choice != '2' && choice != '3');
@@ -445,7 +479,8 @@ public:
         } while (1);
     }
 
-    void Start() {                                                          //Xử lý chính
+    void Start() {                                                          //Xử lý chính     
+
         DoDai = 3; LastDirection = 'd'; DieStatus = 0;
         A[0].x = 18; A[0].y = 19;
         A[1].x = 17; A[1].y = 19;
@@ -453,6 +488,8 @@ public:
         int Huong = 0;
         char t;
         ChooseLevel();
+        SetWindowSize(60, 22);
+
         switch (Level)                                                      //Tạo mồi theo Level
         {
         case 1: TaoMoiLevel1(); break;
@@ -468,17 +505,26 @@ public:
         }
         system("cls");
         VeTuongVaCNV();
-        gotoxy(45, 9);                                                      //Ghi điểm 
-        printf("Your score: 0");
-        gotoxy(45, 11);                                                     //Hiển thị độ khó
-        printf("Difficulty: %d", DoKho);
+        gotoxy(45, 9);                                                      //Ghi điểm
+        set_color(16 * 0 + 7);
+        if (Language == 1)
+            printf("Diem so: 0");
+        else
+            printf("Your score: 0");
+        gotoxy(45, 11);                   //Hiển thị độ khó
+
+        if (Language == 1)
+            printf("Do kho: %d", DoKho);
+        else
+            printf("Difficulty: %d", DoKho);
         do {
             if (_kbhit()) {
                 t = _getch();
-                if (t == 'a' && LastDirection != 'd') { Huong = 2; LastDirection = t; }
-                if (t == 'w' && LastDirection != 's') { Huong = 3; LastDirection = t; }
-                if (t == 'd' && LastDirection != 'a') { Huong = 0; LastDirection = t; }
-                if (t == 's' && LastDirection != 'w') { Huong = 1; LastDirection = t; }
+                if ((t == 'a' || t == 'A') && LastDirection != 'd') { Huong = 2; LastDirection = t; }
+                if ((t == 'w' || t == 'W') && LastDirection != 's') { Huong = 3; LastDirection = t; }
+                if ((t == 'd' || t == 'D') && LastDirection != 'a') { Huong = 0; LastDirection = t; }
+                if ((t == 's' || t == 'S') && LastDirection != 'w') { Huong = 1; LastDirection = t; }
+
             }
             XoaRan();
             VeRanVaMoi();
@@ -488,96 +534,181 @@ public:
         } while (DieStatus == 0);
     }
 
-    void ChooseLevel() {                    //Chọn màn choi
-        do {
-            system("cls");
-            printf("CHOOSE A LEVEL:\n1.Level 1.\n");
-            for (int i = 2; i < 9; i++) {
-                if (i <= LevelUnlocked) printf("%d.Level %d.", i, i);
-                else {
-                    printf("%d.Level %d. LOCKED ", i, i);
-                    if (i == LevelUnlocked + 1) printf("- Reach %d Point at Level %d to unlock!", DoKho * 10 + 2 * i, i - 1);
+    void ChooseLevel() {                    //Chọn màn chơi
+        if (Language == 1)
+            do {
+                system("cls");
+                printf("CHON MAN CHOI:\n1.Man choi 1.\n");
+                for (int i = 2; i < 9; i++) {
+                    if (i <= LevelUnlocked) printf("%d.Man choi %d.", i, i);
+                    else {
+                        printf("%d.Man choi %d. LOCKED ", i, i);
+                        if (i == LevelUnlocked + 1) printf("- Dat %d diem o man choi %d de mo khoa!", DoKho * 10 + 2 * i, i - 1);
+                    }
+                    cout << endl;
                 }
-                cout << endl;
-            }
-            cout << "Choose level to play : ";
-            cin >> Level;
-        } while (Level > LevelUnlocked || Level < 1);
+                cout << "Chon man choi : ";
+                cin >> Level;
+            } while (Level > LevelUnlocked || Level < 1);
+        else
+            do {
+                system("cls");
+                printf("CHOOSE A LEVEL:\n1.Level 1.\n");
+                for (int i = 2; i < 9; i++) {
+                    if (i <= LevelUnlocked) printf("%d.Level %d.", i, i);
+                    else {
+                        printf("%d.Level %d. LOCKED ", i, i);
+                        if (i == LevelUnlocked + 1) printf("- Reach %d Point at Level %d to unlock!", DoKho * 10 + 2 * i, i - 1);
+                    }
+                    cout << endl;
+                }
+                cout << "Choose level to play : ";
+                cin >> Level;
+            } while (Level > LevelUnlocked || Level < 1);
+
     };
 
     void Setting() {
         system("cls");
-        printf("SETTINGS\nCurrent difficulty: %d\nDifficulty selection (1 -> 8): ", DoKho);
+
+        char choice = 'c';
         do {
-            cin >> DoKho;
-        } while (DoKho > 8 || DoKho < 1);
+            if (Language == 1)
+                printf("CAI DAT\n1.Do kho\n2.Ngon ngu\nNhap lua chon cua ban: ");
+            else
+                printf("SETTINGS\n1.Difficulty\n2.Language\nType your choice: ");
+            cin >> choice;
+
+        } while (choice != '1' && choice != '2');
+        system("cls");
+        if (choice == '1') {
+            do {
+                if (Language == 1)
+                    printf("CAI DAT\nDo kho hien tai: %d\nChon do kho (1 -> 8): ", DoKho);
+                else
+                    printf("SETTINGS\nCurrent difficulty: %d\nDifficulty selection (1 -> 8): ", DoKho);
+                cin >> DoKho;
+            } while (DoKho > 8 || DoKho < 1);
+        }
+        else {
+            do {
+                if (Language == 1)
+                    printf("CAI DAT\n1.Tieng Viet\n2.English\nNhap lua chon cua ban: ");
+                else
+                    printf("SETTINGS\n1.Tieng Viet\n2.English\nType your choice: ");
+                cin >> Language;
+            } while (Language != 1 && Language != 2);
+        }
+        system("cls");
     };
 
+    void ChooseLanguage()                                                                      //Menu phía ngoài trước khi vào game
+    {
+        set_color(11);
+        char t;
+        int l = 1;
+        cout << "\tCHAO MUNG BAN DEN VOI TRO CHOI CON RAN\n";
+        cout << "\tVUI LONG CHON NGON NGU\n";
+        cout << "\t\\ WELCOME TO SNAKE GAME\n";
+        cout << "\tPLEASE SELECT LANGUAGE\n";
+        cout << "\t1.Tieng Viet\n";
+        cout << "\t2.English\n";
+        do
+        {
+            cout << "\tMoi ban chon ngon ngu\n\t\\ Please choose your language (1 or 2): ";
+            cin >> Language;
+        } while (Language != 1 && Language != 2);
+        system("cls");
+        if (Language == 1)
+        {
+            cout << "\tCAM ON SU LUA CHON CUA BAN\n"; Sleep(2000);
+            cout << "\tCHUC BAN CO MOT KHOANG THOI GIAN VUI VE\n"; Sleep(2000);
+            cout << "\tTRO CHOI CON RAN - DUOC PHAT TRIEN TU NHOM 3K1T\n"; Sleep(2000);
+            cout << "\t---HUONG DAN CHOI---\n";
+            cout << "\t-Phim W di len-\n";
+            cout << "\t-Phim S di xuong-\n";
+            cout << "\t-Phim A sang trai-\n";
+            cout << "\t-Phim D sang phai-\n";
+            Sleep(2000);
+            do {
+                gotoxy(10, 10);
+                printf("  Nhan Spacebar de tiep tuc ");
+                if (l == 1) {
+                    gotoxy(8, 11);
+                    printf(" .----------------------------. ");
+                    gotoxy(8, 12);
+                    printf(" |____________________________| ");
+                }
+                else {
+                    gotoxy(8, 11);
+                    printf("                                ");
+                    gotoxy(8, 12);
+                    printf(" .----------------------------. ");
+                }
+                if (_kbhit()) {
+                    t = _getch();
+                    if (t == ' ') break;
+                }
+                l = -l;
+                Sleep(350);
+            } while (1);
+            system("cls");
+        }
+        else
+        {
+            cout << "\t  THANK YOU FOR YOUR CHOICE\n"; Sleep(2000);
+            cout << "\t  HAVE A NICE TIME!!!\n"; Sleep(2000);
+            cout << "\t  SNAKE GAME - DEVELOPED BY 3K1T TEAM\n"; Sleep(2000);
+            cout << "\t  ---HOW TO PLAY---\n";
+            cout << "\t  -Press W -Up-\n";
+            cout << "\t  -Press S -Down-\n";
+            cout << "\t  -Press A -Left-\n";
+            cout << "\t  -Press D -Right-\n";
+            Sleep(2000);
+            do {
+                gotoxy(12, 10);
+                printf("  Press Spacebar to continue ");
+                if (l == 1) {
+                    gotoxy(10, 11);
+                    printf(" .----------------------------. ");
+                    gotoxy(10, 12);
+                    printf(" |____________________________| ");
+                }
+                else {
+                    gotoxy(10, 11);
+                    printf("                                ");
+                    gotoxy(10, 12);
+                    printf(" .----------------------------. ");
+                }
+                if (_kbhit()) {
+                    t = _getch();
+                    if (t == ' ') break;
+                }
+                l = -l;
+                Sleep(350);
+            } while (1);
+            system("cls");
+        }
+    }
+
+    void SetWindowSize(SHORT width, SHORT height)
+    {
+        HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+
+        SMALL_RECT WindowSize;
+        WindowSize.Top = 0;
+        WindowSize.Left = 0;
+        WindowSize.Right = width;
+        WindowSize.Bottom = height;
+
+        SetConsoleWindowInfo(hStdout, 1, &WindowSize);
+    }
 };
 
-void SetWindowSize(SHORT width, SHORT height)
-{
-    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-
-    SMALL_RECT WindowSize;
-    WindowSize.Top = 0;
-    WindowSize.Left = 0;
-    WindowSize.Right = width;
-    WindowSize.Bottom = height;
-
-    SetConsoleWindowInfo(hStdout, 1, &WindowSize);
-}
-void MainMenu(int& n)                                                                      //Menu phía ngoài trước khi vào game
-{
-    cout << "\t\t\tCHAO MUNG CAC BAN DEN VOI TRO CHOI CON RAN\n";
-    cout << "\t\t\tWELCOME TO SNAKE GAME\n";
-    cout << "\t\t\tVUI LONG CHON NGON NGU\n";
-    cout << "\t\t\tPLEASE SELECT LANGUAGE\n";
-    cout << "\t\t\t1.Tieng Viet\n";
-    cout << "\t\t\t2.English\n";
-    do
-    {
-        cout << "\t\t\tMoi ban chon ngon ngu/Please choose your language:";
-        cin >> n;
-    } while (n != 1 && n != 2);
-    system("cls");
-    if (n == 1)
-    {
-        cout << "\t\t\tCAM ON SU LUA CHON CUA BAN\n"; Sleep(2500);
-        cout << "\t\t\tCHUC BAN CO MOT KHOANG THOI GIAN VUI VE\n"; Sleep(2500);
-        cout << "\t\t\tTRO CHOI CON RAN-DUOC PHAT TRIEN TU NHOM 3K1T\n"; Sleep(2500);
-        cout << "\t\t\t---HUONG DAN CHOI---\n";
-        cout << "\t\t\t -Phim W di len-\n";
-        cout << "\t\t\t -Phim S di xuong-\n";
-        cout << "\t\t\t -Phim A sang trai-\n";
-        cout << "\t\t\t -Phim D sang phai-\n";
-        Sleep(2500);
-        cout << "\t\t\tCho trong giay lat..."; Sleep(2500);
-        system("cls");
-    }
-    else
-    {
-        cout << "\t\t\tTHANK YOU FOR YOUR CHOICE\n"; Sleep(2500);
-        cout << "\t\t\tHAVE A NICE TIME!!!\n"; Sleep(2500);
-        cout << "\t\t\tSNAKE GAME-DEVELOPED BY 3K1T GROUP\n"; Sleep(2500);
-        cout << "\t\t\t---HOW TO PLAY---\n";
-        cout << "\t\t\t-Press W -Up-\n";
-        cout << "\t\t\t-Press S -Down-\n";
-        cout << "\t\t\t-Press A -Left-\n";
-        cout << "\t\t\t-Press D -Right-\n";
-        Sleep(2500);
-        cout << "\t\t\tWait for a minute..."; Sleep(2500);
-        system("cls");
-    }
-}
 int main()
 {
-    int n;
     system("title SNAKE GAME-TRO CHOI CON RAN-3K1T");
-    system("color FC");
-    MainMenu(n);
-    set_color(16*15+2);
-    SetWindowSize(60, 22);
+
     GAME Game;
     Game.Menu();
     return 0;
